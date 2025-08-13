@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Moduler\Message.cs" />
+    <Compile Include="Moduler\Plads.cs" />
     <Compile Include="Moduler\ProgramState.cs" />
     <Compile Include="Moduler\Settings.cs" />
     <Compile Include="Moduler\UserManager.cs" />

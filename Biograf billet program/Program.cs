@@ -11,6 +11,7 @@ namespace Biograf_billet_program
     {
         static void Main(string[] args)
         {
+            UserManager.IndlæsBookninger();
             ProgramState.HovedMenu();
         }
     }

@@ -10,6 +10,7 @@ namespace Biograf_billet_program.Moduler
     internal class UserManager
     {
         private static string userFile = "brugere.txt";
+        private static string bookningFile = "bookning.txt";
 
 
 
@@ -26,58 +27,58 @@ namespace Biograf_billet_program.Moduler
 
             var linjer = File.ReadAllLines(userFile).ToList();
 
-            Settings.brugerId = 1;
+            Settings.BrugerId = 1;
             if (linjer.Count > 0)
             {
                 var sidsteId = linjer
                     .Select(l => int.Parse(l.Split(';')[0]))
                     .Max();
-                Settings.brugerId = sidsteId + 1;
+                Settings.BrugerId = sidsteId + 1;
             }
 
             Message.PrintMessage("Indtast brugernavn: ");
-            Settings.aktivBruger = Console.ReadLine();
+            Settings.AktivBruger = Console.ReadLine();
 
             Message.PrintMessage("Indtast password: ");
-            Settings.password = Console.ReadLine();
+            Settings.Password = Console.ReadLine();
 
-            Settings.isAdmin = false;
+            Settings.IsAdmin = false;
 
-            Settings.opretBrugerMenu = true;
-            while (Settings.opretBrugerMenu)
+            Settings.OpretBrugerMenu = true;
+            while (Settings.OpretBrugerMenu)
             {
-                Settings.menuInput = 0;
+                Settings.MenuInput = 0;
                 Message.ClearScreen();
                 Message.PrintMessage($"Ønsker du at oprette denne bruger?" +
-                    $"\nBrugernavn: {Settings.aktivBruger}" +
-                    $"\nPassword:   {Settings.password}" +
+                    $"\nBrugernavn: {Settings.AktivBruger}" +
+                    $"\nPassword:   {Settings.Password}" +
                      "\n\n1: Opret" +
                      "\n2: Annuler" +
                      "\n\n> ");
-                Settings.menuInput = Settings.SetInput();
+                Settings.MenuInput = Settings.SetInput();
 
-                if (Settings.menuInput == 1) // Hvis ønsket, opretter og gemmer ny bruger
+                if (Settings.MenuInput == 1) // Hvis ønsket, opretter og gemmer ny bruger
                 {
-                    Settings.nyBruger = $"{Settings.brugerId};{Settings.aktivBruger};{Settings.password};{Settings.isAdmin}";
-                    linjer.Add(Settings.nyBruger);
+                    Settings.NyBruger = $"{Settings.BrugerId};{Settings.AktivBruger};{Settings.Password};{Settings.IsAdmin}";
+                    linjer.Add(Settings.NyBruger);
 
                     File.WriteAllLines(userFile, linjer);
 
-                    Settings.isLoggetIn = true;
-                    Settings.nyBruger = null;
-                    Settings.opretBrugerMenu = false;
+                    Settings.IsLoggetIn = true;
+                    Settings.NyBruger = null;
+                    Settings.OpretBrugerMenu = false;
 
                     Message.ClearScreen();
-                    Message.PrintMessage($"Tilykke {Settings.aktivBruger} du er nu oprettet i systemet og vil blive sendt tilbage til hovedmenuen");
+                    Message.PrintMessage($"Tilykke {Settings.AktivBruger} du er nu oprettet i systemet og vil blive sendt tilbage til hovedmenuen");
                     Console.ReadKey();
                 }
 
-                else if (Settings.menuInput == 2)
+                else if (Settings.MenuInput == 2)
                 {
-                    Settings.aktivBruger = null;
-                    Settings.password = null;
-                    Settings.opretBrugerMenu = false;
-                    Settings.brugerId = 0;
+                    Settings.AktivBruger = null;
+                    Settings.Password = null;
+                    Settings.OpretBrugerMenu = false;
+                    Settings.BrugerId = 0;
 
                     Message.ClearScreen();
                     Message.PrintMessage("Oprettelse annulleret, du vil nu blive sendt tilbage til hovedmenuen");
@@ -93,7 +94,7 @@ namespace Biograf_billet_program.Moduler
                 }
             }
         }
-        
+
 
         /// <summary>
         /// Metode til at logge ind på eksisterende bruger
@@ -108,27 +109,27 @@ namespace Biograf_billet_program.Moduler
 
             Message.PrintMessage("Indtast dit\n" +
                 "Brugernavn: ");
-            Settings.forsøgtBrugernavn = Console.ReadLine();
+            Settings.ForsøgtBrugernavn = Console.ReadLine();
             Message.PrintMessage("Password: ");
-            Settings.forsøgtPassword = Console.ReadLine();
+            Settings.ForsøgtPassword = Console.ReadLine();
 
             var linjer = File.ReadAllLines(userFile);
 
             var bruger = linjer
                 .Select(l => l.Split(';'))
-                .FirstOrDefault(f => f[1] == Settings.forsøgtBrugernavn && f[2] == Settings.forsøgtPassword);
+                .FirstOrDefault(f => f[1] == Settings.ForsøgtBrugernavn && f[2] == Settings.ForsøgtPassword);
 
             if (bruger != null)
             {
-                Settings.brugerId = int.Parse(bruger[0]);
-                Settings.isAdmin = bool.Parse(bruger[3]);
-                Settings.isLoggetIn = true;
-                Settings.aktivBruger = Settings.forsøgtBrugernavn;
-                Settings.forsøgtBrugernavn = null;
-                Settings.forsøgtPassword = null;
+                Settings.BrugerId = int.Parse(bruger[0]);
+                Settings.IsAdmin = bool.Parse(bruger[3]);
+                Settings.IsLoggetIn = true;
+                Settings.AktivBruger = Settings.ForsøgtBrugernavn;
+                Settings.ForsøgtBrugernavn = null;
+                Settings.ForsøgtPassword = null;
 
                 Message.ClearScreen();
-                Message.PrintMessage($"Velkommen {Settings.aktivBruger} du er nu logget in");
+                Message.PrintMessage($"Velkommen {Settings.AktivBruger} du er nu logget in");
                 Console.ReadKey();
 
             }
@@ -147,15 +148,80 @@ namespace Biograf_billet_program.Moduler
         /// </summary>
         public static void LogUd()
         {
-            Settings.aktivBruger = null;
-            Settings.password = null;
-            Settings.isLoggetIn = false;
-            Settings.brugerId = 0;
-            Settings.isAdmin = false;
+            Settings.AktivBruger = null;
+            Settings.Password = null;
+            Settings.IsLoggetIn = false;
+            Settings.BrugerId = 0;
+            Settings.IsAdmin = false;
 
             Message.PrintMessage("Du er blevet logget af");
             Console.ReadKey();
 
+        }
+
+        /// <summary>
+        /// Metode til at gemme bookninger til en fil
+        /// </summary>
+        public static void GemBookninger() 
+        {
+            if(!File.Exists(bookningFile))
+            {
+                File.WriteAllText(bookningFile, "");
+            }
+
+            using (StreamWriter sw = new StreamWriter(bookningFile))
+            {
+                for (int by = 0; by < Settings.Byer.Length; by++)
+                {
+                    for (int film = 0; film < Settings.Film.Length; film++)
+                    {
+                        for (int tid = 0; tid < Settings.Tidspunkt.Length; tid++)
+                        {
+                            for (int række = 0; række < Settings.AntalRækker; række++)
+                            {
+                                for (int sæde = 0; sæde < Settings.AntalSæderPrRække; sæde++)
+                                {
+                                    string booking = Settings.Pladser[by, film, tid, række, sæde];
+                                    if (!string.IsNullOrEmpty(booking)) // kun gem bookede pladser
+                                    {
+                                        sw.WriteLine($"{by},{film},{tid},{række},{sæde},{booking}");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Metode der indlæser tidligere bookninger fra en fil
+        /// </summary>
+        public static void IndlæsBookninger()
+        {
+            if (!File.Exists(bookningFile))
+            {
+                return;
+            }
+
+            string[] linjer = File.ReadAllLines(bookningFile);
+
+            foreach (string linje in linjer)
+            {
+                string[] dele = linje.Split(',');
+
+                if (dele.Length != 6) continue;
+
+                int by = int.Parse(dele[0]);
+                int film = int.Parse(dele[1]);
+                int tid = int.Parse(dele[2]);
+                int række = int.Parse(dele[3]);
+                int sæde = int.Parse(dele[4]);
+                string brugerId = dele[5];
+
+                Settings.Pladser[by, film, tid, række, sæde] = brugerId;
+            }
         }
     }
 }
