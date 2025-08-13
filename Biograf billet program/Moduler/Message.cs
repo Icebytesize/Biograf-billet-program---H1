@@ -15,7 +15,7 @@ namespace Biograf_billet_program.Moduler
         /// <param name="msg"></param>
         public static void PrintMessage(string msg)
         {
-            Console.WriteLine(msg);
+            Console.Write(msg);
         }
 
         /// <summary>
@@ -40,6 +40,30 @@ namespace Biograf_billet_program.Moduler
         public static void ClearScreen()
         {
             Console.Clear();
+        }
+
+
+        /// <summary>
+        /// Metode som viser hovedmenuen
+        /// </summary>
+        public static void HovedMenu()
+        {
+            if (Settings.isLoggetIn) PrintMessage($"Brugernavn: {Settings.aktivBruger}\n");
+            PrintMessage(
+                "===================================\n" +
+                "           Velkommen til           \n" +
+                "Matthias' fiktive biograf franchise\n" +
+                "         billet bestilling         \n" +
+                "===================================\n" +
+                "   Du har nu følgende muligheder   \n\n" +
+                "1: Bestil billet\n");
+            if (!Settings.isLoggetIn) PrintMessage("2: Log in\n" +
+                "3: Opret bruger\n");
+            else if (Settings.isLoggetIn) PrintMessage("2: Log ud\n" +
+                "3: Se bookninger\n");
+            if (Settings.isAdmin) PrintMessage("4: Nulstil alle bookninger\n");
+            PrintMessage("9: Afslut program\n\n" +
+                "> ");
         }
 
 
