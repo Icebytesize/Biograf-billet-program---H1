@@ -42,12 +42,16 @@ namespace Biograf_billet_program.Moduler
 
                 else if (Settings.MenuInput == 3 && Settings.IsLoggetIn)
                 {
-                    // ProgramState.SeBookningere()
+                    UserManager.SeBookninger();
                 }
 
                 else if (Settings.MenuInput == 4 && Settings.IsAdmin)
                 {
-                    // ProgramState.NulStilAlleBookningere
+                    Message.ClearScreen();
+                    Message.PrintMessage("Alle bookninger er nu nulstillet");
+                    UserManager.NulstilAlleBookningere();
+                    Console.ReadKey();
+                    
                 }
 
                 else if (Settings.MenuInput == 9)
@@ -139,16 +143,20 @@ namespace Biograf_billet_program.Moduler
                 Settings.SædeInput = Settings.SetInput();
                 if (Settings.SædeInput == 999)
                 {
+                    if (!Settings.IsLoggetIn) Settings.ÆndreMidlertidigBookninger();
                     UserManager.GemBookninger();
                     Settings.VælgPladserKøre = false;
                 }
-                else if (Settings.IsLoggetIn)
+                else if (Settings.SædeInput > 0 && Settings.SædeInput <= 240)
                 {
-                    Settings.SetLoggetInPlads();
-                }
-                else if (!Settings.IsLoggetIn)
-                {
-                    Settings.SetIkkeLoggetInPlads();
+                    if (Settings.IsLoggetIn)
+                    {
+                        Settings.SetLoggetInPlads();
+                    }
+                    else if (!Settings.IsLoggetIn)
+                    {
+                        Settings.SetIkkeLoggetInPlads();
+                    }
                 }
                 else
                 {

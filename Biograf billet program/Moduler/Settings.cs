@@ -30,12 +30,12 @@ namespace Biograf_billet_program.Moduler
 
 
         /// <summary>
-        /// Metode der enden vælger eller fravælger sæder, samt fortæller hvis sædet i forvejen er optaget
+        /// Metode der enden vælger eller fravælger sæder, samt fortæller hvis sædet i forvejen er optaget for en bruger der er logget in
         /// </summary>
         public static void SetLoggetInPlads()
         {
             int række = (SædeInput - 1) / AntalSæderPrRække; 
-            int sæde = (SædeInput % AntalSæderPrRække) - 1;
+            int sæde = (SædeInput - 1 ) % AntalSæderPrRække;
 
             if (Pladser[ByInput - 1, FilmInput - 1, TidspunktInput - 1, række, sæde] != null && Pladser[ByInput - 1, FilmInput - 1, TidspunktInput - 1, række, sæde] == BrugerId.ToString())
             {
@@ -53,12 +53,15 @@ namespace Biograf_billet_program.Moduler
             }
         }
 
+        /// <summary>
+        /// Metode der enden vælger eller fravælger sæder, samt fortæller hvis sædet i forvejen er optaget for en bruger der ikke er logget in
+        /// </summary>
         public static void SetIkkeLoggetInPlads()
         {
             int række = (SædeInput - 1) / AntalSæderPrRække;
-            int sæde = (SædeInput % AntalSæderPrRække) - 1;
+            int sæde = (SædeInput -1) % AntalSæderPrRække;
 
-            if (Pladser[ByInput - 1, FilmInput - 1, TidspunktInput - 1, række, sæde] != null && Pladser[ByInput - 1, FilmInput - 1, TidspunktInput - 1, række, sæde] == BrugerId.ToString())
+            if (Pladser[ByInput - 1, FilmInput - 1, TidspunktInput - 1, række, sæde] != null && Pladser[ByInput - 1, FilmInput - 1, TidspunktInput - 1, række, sæde] == MidlertidigId.ToString())
             {
                 Pladser[ByInput - 1, FilmInput - 1, TidspunktInput - 1, række, sæde] = null;
             }
@@ -71,6 +74,24 @@ namespace Biograf_billet_program.Moduler
                 Message.ClearScreen();
                 Message.OptagetPlads();
                 Console.ReadKey();
+            }
+        }
+
+
+        /// <summary>
+        /// En metode der ændre en ikke logget ins bookninger til et ID nummer uden for registeret, sådan billet er booket, men det ikke ser ud som om den næste der er midlertigt har booket den
+        /// </summary>
+        public static void ÆndreMidlertidigBookninger()
+        {
+            for (int i = 0; i < AntalRækker; i++)
+            {
+                for(int j = 0; j < AntalSæderPrRække; j++)
+                {
+                    if (Pladser[ByInput - 1, FilmInput - 1, TidspunktInput - 1, i, j] == MidlertidigId.ToString())
+                    {
+                        Pladser[ByInput - 1, FilmInput - 1, TidspunktInput - 1, i, j] = "1000";
+                    }
+                }
             }
         }
     }

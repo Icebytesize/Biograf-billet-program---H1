@@ -223,6 +223,66 @@ namespace Biograf_billet_program.Moduler
                 Settings.Pladser[by, film, tid, række, sæde] = brugerId;
             }
         }
+
+
+
+        /// <summary>
+        /// Metode der udskriver en given brugers bookninger til konsollen
+        /// </summary>
+        public static void SeBookninger()
+        {
+            Message.ClearScreen();
+            Message.PrintMessage("Du har følgende Bookninger\n");
+            for (int by = 0; by < Settings.Byer.Length; by++)
+            {
+                for (int film = 0; film < Settings.Film.Length; film++)
+                {
+                    for (int tid = 0; tid < Settings.Tidspunkt.Length; tid++)
+                    {
+                        for (int række = 0; række < Settings.AntalRækker; række++)
+                        { 
+                            for (int sæde = 0; sæde < Settings.AntalSæderPrRække; sæde++)
+                            {
+                                if (Settings.Pladser[by,film,tid,række,sæde] == Settings.BrugerId.ToString())
+                                {
+                                    Message.PrintMessage($"By: {Settings.Byer[by]}   Film: {Settings.Film[film]}   Tidspunkt: {Settings.Tidspunkt[tid]}   Plads: {(sæde+1)+(række*20)}\n");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            Console.ReadKey();
+        }
+
+
+        /// <summary>
+        /// En kort admin metode der sletter alle bookninger 
+        /// </summary>
+        public static void NulstilAlleBookningere()
+        {
+            System.IO.File.WriteAllText(bookningFile, "");
+
+            
+            for (int by = 0; by < Settings.Byer.Length; by++)
+            {
+                for (int film = 0; film < Settings.Film.Length; film++)
+                {
+                    for (int tid = 0; tid < Settings.Tidspunkt.Length; tid++)
+                    {
+                        for (int række = 0; række < Settings.AntalRækker; række++)
+                        {
+                            for (int sæde = 0; sæde < Settings.AntalSæderPrRække; sæde++)
+                            {
+                                Settings.Pladser[by, film, tid, række, sæde] = null;
+                            }
+                        }
+                    }
+                }
+            }
+
+            GemBookninger();
+        }
     }
 }
 
