@@ -261,6 +261,12 @@ namespace Biograf_billet_program.Moduler
         /// </summary>
         public static void NulstilAlleBookningere()
         {
+
+            if (!File.Exists(bookningFile))
+            {
+                File.WriteAllText(bookningFile, "");
+            }
+
             System.IO.File.WriteAllText(bookningFile, "");
 
             
